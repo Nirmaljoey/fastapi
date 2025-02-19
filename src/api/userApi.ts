@@ -10,11 +10,11 @@ import { handleApiError } from './apiUtils';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // Register User
-export const registerUser = async (userData: UserRegistrationData) => {
+export const registerUser = async (payload: UserRegistrationData) => {
   try {
     const response = await axios.post<BaseApiResponse & { data: UserResponseData }>(
-      `${API_BASE_URL}/auth/users`,
-      userData,
+      '/api/auth/users', // Now correctly maps to /api/marketplace/auth/users
+      payload,
       { withCredentials: true }
     );
     return response.data;
@@ -52,5 +52,19 @@ export const getCurrentUser = async () => {
     return response.data;
   } catch (error) {
     throw handleApiError(error, 'Failed to fetch user data');
+  }
+};
+
+// Login User
+export const loginUser = async (email: string, password: string) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/marketplace/auth/users/tokens`, {
+      email,
+      password,
+    }, { withCredentials: true });
+
+    return response.data;
+  } catch (error) {
+    throw handleApiError(error, 'Login failed');
   }
 };

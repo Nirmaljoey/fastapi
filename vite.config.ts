@@ -6,12 +6,11 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://dev.21yard.com',
+        target: 'https://dev.21yard.com', // Make sure this is the correct base URL
         changeOrigin: true,
-        secure: true,
-        // Remove '/api' only, as the target already includes '/api/marketplace'
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      },
-    },
-  },
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, '/api/marketplace')
+      }
+    }
+  }
 });

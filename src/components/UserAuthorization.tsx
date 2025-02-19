@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import AuthService from '../services/AuthService';
 
 type LoginFormValues = {
   email: string;
@@ -13,33 +14,17 @@ const UserAuthorization: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch('https://dev.21yard.com/api/marketplace/auth/users/tokens', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-        credentials: 'include',
-      });
-
-      const result = await response.json();
-      console.log('🔍 Full API Response:', result);
-
-      if (response.ok && result.access_token) {
-        localStorage.setItem('authToken', result.access_token);
-        navigate('/personal-account/profile');
-      } else {
-        setError(result.error || 'Authorization failed: Invalid response.');
-      }
-    } catch (err) {
-      setError('Login failed due to a network error.');
+      await AuthService.login(data.email, data.password);
+      // Redirect is handled inside AuthService.login()
+    } catch (err: any) {
+      console.error('🚨 Authentication Error:', err);
+      setError(err.response?.data?.error || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -72,7 +57,7 @@ const UserAuthorization: React.FC = () => {
               type="email"
               autoComplete="email"
               placeholder="Enter your email"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black bg-white"
             />
             {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
           </div>
@@ -91,7 +76,7 @@ const UserAuthorization: React.FC = () => {
               id="password"
               autoComplete="current-password"
               placeholder="Enter your password"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-500 text-black bg-white"
             />
             <div
               className="absolute top-9 right-3 cursor-pointer text-gray-600"

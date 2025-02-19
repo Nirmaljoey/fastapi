@@ -1,42 +1,49 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import RegistrationForm from './components/RegistrationForm';
-import UserAuthorization from './components/UserAuthorization';
-import PersonalAccount from './components/PersonalAccount';
-import VerifyEmailInstruction from './components/VerifyEmailInstruction';
-import VerifyEmailPage from './components/VerifyEmailPage';
-import AuthGuard from './components/AuthGuard';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
 import Navbar from './components/Navbar';
-import Home from './pages/Home';
-import PasswordRecovery from './components/PasswordRecovery';
+import AuthGuard from './components/AuthGuard';
+
+// Lazy Loading for Performance Optimization
+const Home = lazy(() => import('./pages/Home'));
+const RegistrationForm = lazy(() => import('./components/RegistrationForm'));
+const VerifyEmailInstruction = lazy(() => import('./components/VerifyEmailInstruction'));
+const VerifyEmailPage = lazy(() => import('./components/VerifyEmailPage'));
+const UserAuthorization = lazy(() => import('./components/UserAuthorization'));
+const PasswordRecovery = lazy(() => import('./components/PasswordRecovery'));
+const PersonalAccount = lazy(() => import('./components/PersonalAccount'));
+const NotFoundPage = lazy(() => import('./components/NotFoundPage')); // New 404 Page
 
 function App() {
   return (
     <Router>
       {/* Navbar is always present */}
       <Navbar />
+
       <div className="app-content">
-        <Routes>
-          {/* Public routes */}
-          <Route path="/" element={<Home />} />
-          <Route path="/register" element={<RegistrationForm />} />
-          <Route path='/verify-email-instruction' element={<VerifyEmailInstruction />} />
-          <Route path="/verify-email/:token"  element={<VerifyEmailPage />} />
-          <Route path="/login" element={<UserAuthorization />} />
-          <Route path="/password-recovery" element={<PasswordRecovery />} />
+        <Suspense fallback={<div className="text-center">Loading...</div>}>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/register" element={<RegistrationForm />} />
+            <Route path="/verify-email-instruction" element={<VerifyEmailInstruction />} />
+            <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
+            <Route path="/login" element={<UserAuthorization />} />
+            <Route path="/password-recovery" element={<PasswordRecovery />} />
 
-          {/* Protected route */}
-          <Route
-            path="/personal-account/profile"
-            element={
-              <AuthGuard>
-                <PersonalAccount />
-              </AuthGuard>
-            }
-          />
+            {/* Protected Routes (Require Authentication) */}
+            <Route
+              path="/personal-account/profile"
+              element={
+                <AuthGuard>
+                  <PersonalAccount />
+                </AuthGuard>
+              }
+            />
 
-          {/* Catch-all redirect */}
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
+            {/* Catch-all Route (404 Page) */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
       </div>
     </Router>
   );
