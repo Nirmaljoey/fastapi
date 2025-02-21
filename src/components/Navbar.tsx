@@ -1,20 +1,112 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaUserCircle } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext';
 
 const Navbar: React.FC = () => {
+  const { isAuthenticated, user, logout } = useAuth();
+  const navigate = useNavigate();
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const handleLogout = async () => {
+    await logout();
+    setShowDropdown(false);
+    navigate('/login');
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
     <nav className="w-screen flex justify-between items-center px-10 py-4 bg-white shadow-md">
-      <div className="text-2xl font-bold text-black">
-        <img src="/src/assets/logo.svg" alt="21YARD Logo" className="h-4" /></div>
+      {/* Logo */}
+      <Link to="/" className="text-2xl font-bold text-black">
+        <img src="/src/assets/logo.svg" alt="21YARD Logo" className="h-4" />
+      </Link>
+
+      {/* Center Links */}
       <div className="flex gap-10">
-        <a href="/" className="text-black hover:text-gray-600">Заказы</a>
-        <a href="/personal-account/profile" className="text-black hover:text-gray-600">Мои заявки</a>
-        <a href="/" className="text-black hover:text-gray-600">Тарификация</a>
-        <a href="/" className="text-black hover:text-gray-600">Шаблоны</a>
+        <Link to="/" className="text-black hover:text-gray-600">Заказы</Link>
+        <Link to="/personal-account/profile/" className="text-black hover:text-gray-600">Мои заявки</Link>
+        <Link to="/" className="text-black hover:text-gray-600">Тарификация</Link>
+        <Link to="/" className="text-black hover:text-gray-600">Шаблоны</Link>
       </div>
-      <div className="flex gap-6">
-        <a href="https://t.me/manager21yard" target="_blank" rel="noopener noreferrer" className="text-black hover:text-gray-600">❓</a>
-        <a href="/login" className="px-5 py-2 border border-gray-400 rounded hover:bg-gray-200">Вход</a>
-        <a href="/register" className="px-5 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-300">Регистрация</a>
+
+      {/* Right Section */}
+      <div className="flex gap-8 items-center">
+        {isAuthenticated ? (
+          <>
+            <Link to="/personal-account/applications/create">
+              <button className="bg-yellow-400 text-black px-5 py-2 rounded-2xl hover:bg-yellow-300">
+                Создать заявку
+              </button>
+            </Link>
+
+            {/* User Profile Dropdown */}
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() => setShowDropdown((prev) => !prev)}
+                className="flex items-center focus:outline-none bg-transparent"
+              >
+                <FaUserCircle size={30} className="text-gray-700 hover:text-yellow-300" />
+              </button>
+              {showDropdown && (
+                <div className="absolute right-0 mt-2 w-60  bg-white shadow-lg rounded-lg z-50">
+                  <div className="p-4 border-b">
+                    <p className="font-semibold text-lg text-black">{user?.name}</p>
+                    <p className="text-sm text-gray-600">{user?.email}</p>
+                  </div>
+                  <Link to="/personal-account/profile" className="block px-4 py-2 hover:bg-gray-100 text-black">
+                    Мой профиль
+                  </Link>
+                  <Link to="/companies" className="block px-4 py-2 hover:bg-gray-100 text-black">
+                    Мои компании
+                  </Link>
+                  <Link to="/requests" className="block px-4 py-2 hover:bg-gray-100 text-black">
+                    Работа с заявками
+                  </Link>
+                  <Link to="/settings" className="block px-4 py-2 hover:bg-gray-100 text-black">
+                    Настройки
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="block w-full bg-transparent px-4 py-2 text-left text-black hover:bg-red-500 hover:text-white"
+                  >
+                    Выйти
+                  </button>
+                </div>
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            <a
+              href="https://t.me/manager21yard"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-black hover:text-gray-600"
+            >
+              ❓
+            </a>
+            <Link to="/login" className="px-5 py-2 border border-gray-400 rounded-2xl hover:bg-gray-200">
+              Вход
+            </Link>
+            <Link to="/register" className="px-5 py-2 bg-yellow-400 text-black rounded-2xl hover:bg-yellow-300">
+              Регистрация
+            </Link>
+          </>
+        )}
       </div>
     </nav>
   );

@@ -1,78 +1,120 @@
-import axios from 'axios';
+// api.ts
+import axios from "axios";
 import {
   UserRegistrationData,
   UserResponseData,
   VerificationResponseData,
   BaseApiResponse,
+  AuthTokens,
 } from './types';
-import { handleApiError } from './apiUtils';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-// Register User
-export const registerUser = async (payload: UserRegistrationData) => {
+export const registerUser = async (payload: UserRegistrationData): Promise<BaseApiResponse & { data?: UserResponseData }> => {
   try {
-    const response = await axios.post<BaseApiResponse & { data: UserResponseData }>( `${API_BASE_URL}/marketplace/auth/users`, // Now correctly maps to /api/marketplace/auth/users
+    const response = await axios.post<BaseApiResponse & { data: UserResponseData }>(
+      "/api/marketplace/auth/users",
       payload,
-      { withCredentials: true }
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        withCredentials: true,
+      }
     );
-    return response.data;
-  } catch (error) {
-    throw handleApiError(error, 'Registration failed');
+    return {
+      success: true,
+      status: response.status,
+      error: null,
+      data: response.data.data,
+    };
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.error || 'Registration failed';
+    const status = error.response?.status || 500;
+    return {
+      success: false,
+      status,
+      error: errorMessage,
+    };
   }
 };
 
-// Verify Email
-export const verifyEmail = async (token: string) => {
+export const verifyEmail = async (token: string): Promise<BaseApiResponse & { data?: VerificationResponseData }> => {
   try {
     const response = await axios.get<BaseApiResponse & { data: VerificationResponseData }>(
-      `${API_BASE_URL}/marketplace/auth/users/verify-email/${token}`, // ✅ Fixed endpoint
+      `/api/marketplace/auth/users/verify-email/${token}`,
       { withCredentials: true }
     );
-    return response.data;
-  } catch (error) {
-    throw handleApiError(error, 'Email verification failed');
+    return {
+      success: true,
+      status: response.status,
+      error: null,
+      data: response.data.data,
+    };
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.error || 'Email verification failed';
+    const status = error.response?.status || 500;
+    return {
+      success: false,
+      status,
+      error: errorMessage,
+    };
   }
 };
 
-// Get Current User
-export const getCurrentUser = async () => {
+export const getCurrentUser = async (): Promise<UserResponseData> => {
   try {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('access_token');
     if (!token) throw new Error('No authentication token found');
 
     const response = await axios.get<BaseApiResponse & { data: UserResponseData }>(
-      `${API_BASE_URL}/marketplace/auth/users/me`, // ✅ Fixed endpoint
+      "/api/marketplace/auth/users/me",
       {
+        headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
-        headers: { Authorization: `Bearer ${token}` }
       }
     );
-
-    return response.data.data; // ✅ Ensures only `data` is returned
-  } catch (error) {
-    throw handleApiError(error, 'Failed to fetch user data');
+    return response.data.data;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.error || 'Failed to fetch user data';
+    throw new Error(errorMessage);
   }
 };
 
-// Login User
-export const loginUser = async (email: string, password: string) => {
+export const loginUserFromUserApi = async (email: string, password: string): Promise<BaseApiResponse & { data?: AuthTokens }> => {
   try {
-    const response = await axios.post<BaseApiResponse & { data: { token: string } }>(
-      `${API_BASE_URL}/marketplace/auth/users/tokens`,
+    const response = await axios.post<BaseApiResponse & { data: AuthTokens }>(
+      "/api/marketplace/auth/users/tokens",
       { email, password },
-      { withCredentials: true }
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        withCredentials: true,
+      }
     );
 
-    const token = response.data?.data?.token;
-    if (token) {
-      localStorage.setItem('authToken', token); // ✅ Store token securely
+    const { access_token, refresh_token } = response.data.data;
+    if (access_token && refresh_token) {
+      localStorage.setItem('access_token', access_token);
+      localStorage.setItem('refresh_token', refresh_token);
     } else {
-      throw new Error('Token missing in response');
+      throw new Error('Tokens missing in response');
     }
 
-    return response.data;
-  } catch (error) {
-    throw handleApiError(error, 'Login failed');
+    return {
+      success: true,
+      status: response.status,
+      error: null,
+      data: response.data.data,
+    };
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.error || 'Login failed';
+    const status = error.response?.status || 500;
+    return {
+      success: false,
+      status,
+      error: errorMessage,
+    };
   }
 };

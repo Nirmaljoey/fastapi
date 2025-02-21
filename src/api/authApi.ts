@@ -2,10 +2,8 @@ import axios from 'axios';
 import { LoginCredentials, AuthTokens, BaseApiResponse } from './types';
 import { handleApiError } from './apiUtils';
 
-// Use relative path for Vite proxy
 const API_BASE_URL = '/api';
 
-// Login API
 export const loginUser = async (credentials: LoginCredentials) => {
   try {
     const requestUrl = `${API_BASE_URL}/auth/users/tokens`;
@@ -14,7 +12,7 @@ export const loginUser = async (credentials: LoginCredentials) => {
     const response = await axios.post<BaseApiResponse & { data: AuthTokens | null }>(
       requestUrl,
       credentials,
-      { withCredentials: true }  // Ensure server supports credentials
+      { withCredentials: true }
     );
 
     if (response.data.success && response.data.data?.access_token) {
@@ -29,7 +27,6 @@ export const loginUser = async (credentials: LoginCredentials) => {
   }
 };
 
-// Logout API
 export const logoutUser = () => {
   console.log('🔓 Logging out user and removing access token.');
   localStorage.removeItem('access_token');

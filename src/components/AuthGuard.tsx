@@ -8,33 +8,38 @@ type AuthGuardProps = {
 const AuthGuard = ({ children }: AuthGuardProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
+  const checkAuth = () => {
+    const token = localStorage.getItem("access_token");
+    console.log("🔑 Checking token in localStorage:", token ? "Found" : "Not found");
+    setIsAuthenticated(!!token);
+  };
+
   useEffect(() => {
-    const checkAuth = () => {
-      const token = localStorage.getItem("authToken"); 
-      console.log("Checking authentication...");
-      console.log("Access Token:", token);
-      setIsAuthenticated(!!token);
+    console.log(" AuthGuard: Checking authentication status...");
+    checkAuth();
+
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "access_token") {
+        console.log(" Storage event detected, rechecking auth...");
+        checkAuth();
+      }
     };
 
-    checkAuth(); // Initial check
-
-    return () => {
-      console.log("Cleaning up AuthGuard...");
-    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
-  // Show loading state while checking authentication
   if (isAuthenticated === null) {
-    console.log("Authentication check in progress...");
-    return <div>Loading...</div>;
+    console.log("⌛ AuthGuard: Authentication check in progress...");
+    return <div className="text-center text-lg font-semibold mt-10">🔄 Loading...</div>;
   }
 
   if (!isAuthenticated) {
-    console.log("User not authenticated, redirecting to login...");
+    console.log(" AuthGuard: User not authenticated, redirecting to login...");
     return <Navigate to="/login" replace />;
   }
 
-  console.log("User authenticated, granting access.");
+  console.log(" AuthGuard: User authenticated, granting access.");
   return <>{children}</>;
 };
 

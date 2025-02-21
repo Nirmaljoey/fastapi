@@ -1,51 +1,56 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Suspense, lazy } from 'react';
-import Navbar from './components/Navbar';
-import AuthGuard from './components/AuthGuard';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Suspense, lazy } from "react";
+import Navbar from "./components/Navbar";
+import AuthGuard from "./components/AuthGuard";
+import { AuthProvider } from "./context/AuthContext";
+import Footer from "./components/Footer";
 
-// Lazy Loading for Performance Optimization
-const Home = lazy(() => import('./pages/Home'));
-const RegistrationForm = lazy(() => import('./components/RegistrationForm'));
-const VerifyEmailInstruction = lazy(() => import('./components/VerifyEmailInstruction'));
-const VerifyEmailPage = lazy(() => import('./components/VerifyEmailPage'));
-const UserAuthorization = lazy(() => import('./components/UserAuthorization'));
-const PasswordRecovery = lazy(() => import('./components/PasswordRecovery'));
-const PersonalAccount = lazy(() => import('./components/PersonalAccount'));
-const NotFoundPage = lazy(() => import('./components/NotFoundPage')); // New 404 Page
+const Home = lazy(() => import("./pages/Home"));
+const ListingsPage = lazy(() => import("./pages/ListingsPage"));
+const RegistrationForm = lazy(() => import("./pages/RegistrationForm"));
+const UserAuthorization = lazy(() => import("./pages/UserAuthorization"))
+const PasswordRecovery = lazy(() => import("./components/PasswordRecovery"));
+const PersonalAccount = lazy(() => import("./pages/PersonalAccount"));
+const NotFoundPage = lazy(() => import("./components/NotFoundPage"));
 
 function App() {
   return (
-    <Router>
-      {/* Navbar is always present */}
-      <Navbar />
+    <AuthProvider>
+      <Router>
+        <Navbar />
 
-      <div className="app-content">
-        <Suspense fallback={<div className="text-center">Loading...</div>}>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<Home />} />
-            <Route path="/register" element={<RegistrationForm />} />
-            <Route path="/verify-email-instruction" element={<VerifyEmailInstruction />} />
-            <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
-            <Route path="/login" element={<UserAuthorization />} />
-            <Route path="/password-recovery" element={<PasswordRecovery />} />
+        <div className="app-content">
+          <Suspense fallback={<div className="text-center text-lg font-semibold mt-10">🔄 Loading...</div>}>
+            <Routes>
+              {/* 🔹 Public Routes */}
+              <Route path="/" element={<Home />} />
+              <Route path="/register" element={<RegistrationForm />} />
+              <Route path="/login" element={<UserAuthorization />} />
+              <Route path="/password-recovery" element={<PasswordRecovery />} />
 
-            {/* Protected Routes (Require Authentication) */}
-            <Route
-              path="/personal-account/profile"
-              element={
-                <AuthGuard>
-                  <PersonalAccount />
-                </AuthGuard>
-              }
-            />
-
-            {/* Catch-all Route (404 Page) */}
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </Suspense>
-      </div>
-    </Router>
+              <Route
+                path="/personal-account/profile"
+                element={
+                  <AuthGuard>
+                    <PersonalAccount />
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="/personal-account/profile/listings"
+                element={
+                  <AuthGuard>
+                    <ListingsPage />
+                  </AuthGuard>
+                }
+              />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </Suspense>
+        </div>
+        <Footer />
+      </Router>
+    </AuthProvider>
   );
 }
 

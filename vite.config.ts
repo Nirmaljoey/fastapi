@@ -5,12 +5,10 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': {
-        target: 'https://dev.21yard.com', // Make sure this is the correct base URL
+      '/api/marketplace': {
+        target: 'https://dev.21yard.com',
         changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '/api/marketplace')
-      }
-    }
-  }
+      },
+    },
+  },
 });
