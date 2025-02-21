@@ -1,50 +1,66 @@
-# React + TypeScript + Vite
+📌 Обзор проекта
+Этот проект – фронтенд-приложение на React с TypeScript. Он включает авторизацию пользователей, управление профилем и отображение списка объектов через API.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🔹 Основные функции
+✅ Регистрация и вход пользователей
+✅ Отображение профиля пользователя
+✅ Страница списка объектов
+✅ Пагинация и взаимодействие с API
+✅ Навигация через React Router
+✅ Валидация форм
 
-Currently, two official plugins are available:
+🛠️ Используемые технологии
+React 19 + TypeScript → Основной фреймворк
+Vite → Инструмент сборки
+React Router v7 → Маршрутизация
+Axios → Запросы к API
+React Hook Form + Yup → Валидация форм
+Tailwind CSS → Стилизация
+Lucide React & React Icons → Иконки
+ESLint + TypeScript ESLint → Проверка качества кода
+📂 Структура проекта
+bash
+Copy
+Edit
+/src
+ ├── components/    # UI-компоненты
+ ├── pages/         # Страницы приложения (Главная, Вход, Регистрация, Профиль, Объявления)
+ ├── hooks/         # Кастомные хуки
+ ├── api/           # Запросы к API
+ ├── utils/         # Утилиты
+ ├── App.tsx        # Главный компонент
+ ├── main.tsx       # Точка входа React
+🚀 Как запустить проект
+🔹 1. Установка зависимостей
+sh
+Copy
+Edit
+npm install
+🔹 2. Запуск сервера разработки
+sh
+Copy
+Edit
+npm run dev
+Открыть http://localhost:5173 в браузере.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+🔹 3. Сборка проекта
+sh
+Copy
+Edit
+npm run build
+🔹 4. Предпросмотр продакшен-версии
+sh
+Copy
+Edit
+npm run preview
+🔗 API Эндпоинты
+Функция	Метод	Эндпоинт
+Регистрация	POST	/auth/users
+Вход	POST	/auth/users/tokens
+Получение профиля	GET	/auth/users/me
+Получение списка объявлений	GET	/applications/listing
+📌 Скрипты package.json
+npm run dev → Запуск сервера разработки
+npm run build → Сборка проекта
+npm run lint → Проверка кода
+npm run preview → Просмотр продакшен-версии
