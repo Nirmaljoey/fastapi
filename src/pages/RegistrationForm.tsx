@@ -45,8 +45,9 @@ const RegistrationForm: React.FC = () => {
       } else {
         setError(response.error || 'Registration failed');
       }
-    } catch (err: any) {
-      setError(err.message || 'Registration failed');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Registration failed';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -70,7 +71,7 @@ const RegistrationForm: React.FC = () => {
                 id="first_name"
                 {...register('first_name', { required: 'Имя обязательно', minLength: { value: 2, message: 'Минимум 2 символа' } })}
                 placeholder="Введите ваше имя"
-                className="w-full p-2 border  rounded-xl bg-white text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-600"
+                className="w-full p-2 border rounded-xl bg-white text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-600"
               />
               {errors.first_name && <p className="text-red-500 text-xs">{errors.first_name.message}</p>}
             </div>
@@ -90,7 +91,7 @@ const RegistrationForm: React.FC = () => {
                 id="phone"
                 {...register('phone', { required: 'Телефон обязателен', pattern: { value: /^\+7\d{10}$/, message: 'Формат: +71234567890' } })}
                 placeholder="+71234567890"
-                className="w-full p-2 border  rounded-xl bg-white text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-600"
+                className="w-full p-2 border rounded-xl bg-white text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-600"
               />
               {errors.phone && <p className="text-red-500 text-xs">{errors.phone.message}</p>}
             </div>
@@ -101,7 +102,7 @@ const RegistrationForm: React.FC = () => {
                 {...register('password', { required: 'Пароль обязателен', minLength: { value: 6, message: 'Минимум 6 символов' }, validate: (v) => /[A-Z]/.test(v) || 'Требуется заглавная буква' })}
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Не менее 6 символов"
-                className="w-full p-2 border  rounded-xl bg-white text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-600"
+                className="w-full p-2 border rounded-xl bg-white text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-600"
               />
               <div className="absolute top-9 right-3 cursor-pointer" onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
@@ -115,7 +116,7 @@ const RegistrationForm: React.FC = () => {
                 {...register('confirmPassword', { required: 'Подтвердите пароль', validate: (v) => v === password || 'Пароли не совпадают' })}
                 type={showConfirmPassword ? 'text' : 'password'}
                 placeholder="Повторите ваш пароль"
-                className="w-full p-2 border  rounded-xl bg-white text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-600"
+                className="w-full p-2 border rounded-xl bg-white text-black text-sm focus:outline-none focus:ring-2 focus:ring-yellow-600"
               />
               <div className="absolute top-9 right-3 cursor-pointer" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                 {showConfirmPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}

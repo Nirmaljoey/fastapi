@@ -8,7 +8,7 @@ import Footer from "./components/Footer";
 const Home = lazy(() => import("./pages/Home"));
 const ListingsPage = lazy(() => import("./pages/ListingsPage"));
 const RegistrationForm = lazy(() => import("./pages/RegistrationForm"));
-const UserAuthorization = lazy(() => import("./pages/UserAuthorization"))
+const UserAuthorization = lazy(() => import("./pages/UserAuthorization"));
 const PasswordRecovery = lazy(() => import("./components/PasswordRecovery"));
 const PersonalAccount = lazy(() => import("./pages/PersonalAccount"));
 const NotFoundPage = lazy(() => import("./components/NotFoundPage"));
@@ -17,38 +17,48 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <Navbar />
+        <div className="flex flex-col min-h-screen">
+          <Navbar />
+          <main className="flex-grow app-content">
+            <Suspense
+              fallback={
+                <div className="text-center text-lg font-semibold mt-10">
+                  🔄 Loading...
+                </div>
+              }
+            >
+              <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<Home />} />
+                <Route path="/register" element={<RegistrationForm />} />
+                <Route path="/login" element={<UserAuthorization />} />
+                <Route path="/password-recovery" element={<PasswordRecovery />} />
 
-        <div className="app-content">
-          <Suspense fallback={<div className="text-center text-lg font-semibold mt-10">🔄 Loading...</div>}>
-            <Routes>
-              {/* 🔹 Public Routes */}
-              <Route path="/" element={<Home />} />
-              <Route path="/register" element={<RegistrationForm />} />
-              <Route path="/login" element={<UserAuthorization />} />
-              <Route path="/password-recovery" element={<PasswordRecovery />} />
+                {/* Protected Routes */}
+                <Route
+                  path="/personal-account/profile"
+                  element={
+                    <AuthGuard>
+                      <PersonalAccount />
+                    </AuthGuard>
+                  }
+                />
+                <Route
+                  path="/personal-account/profile/listings"
+                  element={
+                    <AuthGuard>
+                      <ListingsPage />
+                    </AuthGuard>
+                  }
+                />
 
-              <Route
-                path="/personal-account/profile"
-                element={
-                  <AuthGuard>
-                    <PersonalAccount />
-                  </AuthGuard>
-                }
-              />
-              <Route
-                path="/personal-account/profile/listings"
-                element={
-                  <AuthGuard>
-                    <ListingsPage />
-                  </AuthGuard>
-                }
-              />
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-          </Suspense>
+                {/* Catch-all Route */}
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </Suspense>
+          </main>
+          <Footer />
         </div>
-        <Footer />
       </Router>
     </AuthProvider>
   );

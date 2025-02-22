@@ -75,17 +75,17 @@ const Footer: React.FC = () => {
                 </div>
             </div>
 
-            <div className="flex flex-col items-center text-white mt-6">
-                <h4 className="text-sm font-semibold">Юридический адрес</h4>
-                <p className="text-sm mt-2">
+            <div className="flex flex-col m-10 items-left text-white mt-6">
+                <h4 className="text-lg font-semibold">Юридический адрес</h4>
+                <p className="text-lg mt-2">
                     194021 Санкт-Петербург, ул. Шателена, д. 9, лит. А, пом. 2-Н
                 </p>
-                <p className="text-sm">
+                <p className="text-lg">
                     197022 Санкт-Петербург, пр-кт Медиков, д. 3А офис 218
                 </p>
             </div>
 
-            <div className="mt-8 border-t border-gray-700 pt-4 text-center text-xs">
+            <div className="mt-8 border-t border-gray-700 pt-4 text-center text-lg">
                 <p>21Yard © 2025</p>
                 <p>ООО "21ГРУПП", ИНН 7814959568, ОГРН 1137847482486</p>
             </div>

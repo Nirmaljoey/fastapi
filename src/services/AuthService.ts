@@ -1,5 +1,9 @@
 import axios from "axios";
 
+interface UserProfile {
+  first_name: string;
+  email: string;
+}
 
 class AuthService {
   static async login(email: string, password: string): Promise<boolean> {
@@ -17,22 +21,23 @@ class AuthService {
         }
       );
 
-      console.log(" Login successful, extracting tokens from cookies...");
+      console.log("Login successful, extracting tokens from cookies...");
       const accessToken = AuthService.getCookie("accessToken");
       const refreshToken = AuthService.getCookie("refreshToken");
 
       if (!accessToken || !refreshToken) {
-        console.error(" Missing access or refresh token in cookies.");
+        console.error("Missing access or refresh token in cookies.");
         return false;
       }
 
       localStorage.setItem("access_token", accessToken);
       localStorage.setItem("refresh_token", refreshToken);
-      console.log(" Both tokens stored in localStorage successfully.");
+      console.log("Both tokens stored in localStorage successfully.");
       return true;
-    } catch (error: any) {
-      console.error(" API Error:", error);
-      throw new Error(error.response?.data?.error || "Login failed. Please try again.");
+    } catch (error: unknown) {
+      const err = error as AxiosError;
+      console.error("API Error:", err);
+      throw new Error(err.response?.data?.error || "Login failed. Please try again.");
     }
   }
 
@@ -41,21 +46,21 @@ class AuthService {
     return !!token;
   }
 
-  static async getUserProfile(): Promise<any> {
+  static async getUserProfile(): Promise<UserProfile> {
     try {
       const token = localStorage.getItem("access_token");
       if (!token) throw new Error("No access token found. Please log in.");
 
-      const response = await axios.get("/api/marketplace/auth/users/me", {
+      const response = await axios.get<{ data: UserProfile }>("/api/marketplace/auth/users/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
         withCredentials: true,
       });
 
-      return response.data;
+      return response.data.data;
     } catch (error) {
-      console.error(" Failed to fetch user profile:", error);
+      console.error("Failed to fetch user profile:", error);
       throw error;
     }
   }
@@ -64,7 +69,7 @@ class AuthService {
     try {
       const token = localStorage.getItem("access_token");
       if (!token) {
-        console.warn(" No access token found, already logged out.");
+        console.warn("No access token found, already logged out.");
         return;
       }
 
@@ -72,16 +77,14 @@ class AuthService {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       }).catch((error) => {
-        console.warn(" Server logout failed (might be expected):", error.response?.status);
-
+        console.warn("Server logout failed (might be expected):", error.response?.status);
       });
-
 
       localStorage.removeItem("access_token");
       localStorage.removeItem("refresh_token");
-      console.log(" Logout successful (local cleanup done)");
+      console.log("Logout successful (local cleanup done)");
     } catch (error) {
-      console.error(" Unexpected logout error:", error);
+      console.error("Unexpected logout error:", error);
       localStorage.removeItem("access_token");
       localStorage.removeItem("refresh_token");
     }
@@ -89,7 +92,7 @@ class AuthService {
 
   static getCookie(name: string): string | null {
     const cookies = document.cookie.split("; ");
-    for (let cookie of cookies) {
+    for (const cookie of cookies) {
       const [key, value] = cookie.split("=");
       if (key.trim() === name) {
         return decodeURIComponent(value);
@@ -100,3 +103,10 @@ class AuthService {
 }
 
 export default AuthService;
+
+interface AxiosError {
+  response?: {
+    data?: { error?: string };
+    status?: number;
+  };
+}

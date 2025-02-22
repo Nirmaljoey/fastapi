@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
-import { useAuth } from '../context/AuthContext';
+import { useAuthContext } from '../context/AuthContext';
 
 const Navbar: React.FC = () => {
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, user, logout } = useAuthContext();
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -15,7 +15,6 @@ const Navbar: React.FC = () => {
     navigate('/login');
   };
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -30,12 +29,9 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="w-screen flex justify-between items-center px-10 py-4 bg-white shadow-md">
-      {/* Logo */}
       <Link to="/" className="text-2xl font-bold text-black">
         <img src="/src/assets/logo.svg" alt="21YARD Logo" className="h-4" />
       </Link>
-
-      {/* Center Links */}
       <div className="flex gap-10">
         <Link to="/" className="text-black hover:text-gray-600">Заказы</Link>
         <Link to="/personal-account/profile/" className="text-black hover:text-gray-600">Мои заявки</Link>
@@ -43,7 +39,6 @@ const Navbar: React.FC = () => {
         <Link to="/" className="text-black hover:text-gray-600">Шаблоны</Link>
       </div>
 
-      {/* Right Section */}
       <div className="flex gap-8 items-center">
         {isAuthenticated ? (
           <>
@@ -53,7 +48,6 @@ const Navbar: React.FC = () => {
               </button>
             </Link>
 
-            {/* User Profile Dropdown */}
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setShowDropdown((prev) => !prev)}
@@ -62,10 +56,10 @@ const Navbar: React.FC = () => {
                 <FaUserCircle size={30} className="text-gray-700 hover:text-yellow-300" />
               </button>
               {showDropdown && (
-                <div className="absolute right-0 mt-2 w-60  bg-white shadow-lg rounded-lg z-50">
+                <div className="absolute right-0 mt-2 w-60 bg-white shadow-lg rounded-lg z-50">
                   <div className="p-4 border-b">
-                    <p className="font-semibold text-lg text-black">{user?.name}</p>
-                    <p className="text-sm text-gray-600">{user?.email}</p>
+                    <p className="font-semibold text-lg text-black">{user?.name || 'User'}</p>
+                    <p className="text-sm text-gray-600">{user?.email || ''}</p>
                   </div>
                   <Link to="/personal-account/profile" className="block px-4 py-2 hover:bg-gray-100 text-black">
                     Мой профиль

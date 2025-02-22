@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import ListingItem from "../components/ListingItem";
 import { Listing } from "../types/listing";
@@ -47,63 +47,69 @@ const ListingsPage = () => {
     );
   });
 
-  const fetchListings = async (page: number) => {
-    setLoading(true);
-    setError(null);
+  const fetchListings = useCallback(
+    async (page: number) => {
+      setLoading(true);
+      setError(null);
 
-    try {
-      const token = localStorage.getItem("access_token");
-      if (!token) throw new Error("No access token found");
+      try {
+        const token = localStorage.getItem("access_token");
+        if (!token) throw new Error("No access token found");
 
-      const offset = (page - 1) * limit;
-      const response = await fetch(
-        `/api/marketplace/applications/listing?offset=${offset}&limit=${limit}`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log("API Response:", { offset, limit, listings: data.data });
-
-      if (data.success) {
-        const newListings = data.data as Listing[];
-        setListings(newListings);
-
-
-        if (page === 1 && totalPages === 0) {
-          const initialFetch = await fetch(
-            `/api/marketplace/applications/listing?offset=0&limit=1000`,
-            {
-              headers: {
-                Accept: "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          const initialData = await initialFetch.json();
-          if (initialData.success) {
-            const totalItems = initialData.data.length;
-            setTotalPages(Math.ceil(totalItems / limit));
+        const offset = (page - 1) * limit;
+        const response = await fetch(
+          `/api/marketplace/applications/listing?offset=${offset}&limit=${limit}`,
+          {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${token}`,
+            },
           }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
         }
-      } else {
-        setError(data.error || "Failed to fetch listings");
+
+        const data = await response.json();
+        console.log("API Response:", { offset, limit, listings: data.data });
+
+        if (data.success) {
+          const newListings = data.data as Listing[];
+          setListings(newListings);
+
+          if (page === 1 && totalPages === 0) {
+            const initialFetch = await fetch(
+              `/api/marketplace/applications/listing?offset=0&limit=1000`,
+              {
+                headers: {
+                  Accept: "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+            const initialData = await initialFetch.json();
+            if (initialData.success) {
+              const totalItems = initialData.data.length;
+              setTotalPages(Math.ceil(totalItems / limit));
+            }
+          }
+        } else {
+          setError(data.error || "Failed to fetch listings");
+        }
+      } catch (error: unknown) {
+        console.error("Fetch error:", error);
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "An error occurred while fetching listings";
+        setError(errorMessage);
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      console.error("Fetch error:", error);
-      setError(error.message || "An error occurred while fetching listings");
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [limit, totalPages]
+  );
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
@@ -112,7 +118,7 @@ const ListingsPage = () => {
       return;
     }
     fetchListings(currentPage);
-  }, [currentPage, navigate]);
+  }, [currentPage, navigate, fetchListings]); // Add fetchListings to dependencies
 
   const handleResetFilters = () => {
     setSelectedRegion("");
@@ -125,7 +131,6 @@ const ListingsPage = () => {
 
   return (
     <div className="flex h-screen bg-gradient-to-r from-gray-100 to-white relative">
-
       <div className="w-1/5 max-h-[70vh] bg-white shadow-xl rounded-3xl p-6 mx-4 my-4 ml-28 text-black">
         <h2 className="text-lg font-semibold mb-4">Фильтр</h2>
         <div className="space-y-4">

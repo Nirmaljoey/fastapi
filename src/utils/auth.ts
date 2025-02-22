@@ -1,4 +1,3 @@
-export const isAuthenticated = () => {
-    return document.cookie.includes("accessToken");
-  };
-  
+export const isAuthenticated = (): boolean => {
+  return !!document.cookie.includes("accessToken");
+};

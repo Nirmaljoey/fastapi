@@ -70,9 +70,10 @@ const PersonalAccount: React.FC = () => {
         } else {
           throw new Error("Invalid API response structure");
         }
-      } catch (err: any) {
+      } catch (err: unknown) { // Replace 'any' with 'unknown'
         console.error(" Error fetching profile:", err);
-        setError(err.message || "Failed to load profile data");
+        const errorMessage = err instanceof Error ? err.message : "Failed to load profile data";
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }

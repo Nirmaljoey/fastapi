@@ -1,4 +1,3 @@
-// api.ts
 import axios from "axios";
 import {
   UserRegistrationData,
@@ -27,9 +26,10 @@ export const registerUser = async (payload: UserRegistrationData): Promise<BaseA
       error: null,
       data: response.data.data,
     };
-  } catch (error: any) {
-    const errorMessage = error.response?.data?.error || 'Registration failed';
-    const status = error.response?.status || 500;
+  } catch (error: unknown) {
+    const err = error as AxiosError;
+    const errorMessage = err.response?.data?.error || 'Registration failed';
+    const status = err.response?.status || 500;
     return {
       success: false,
       status,
@@ -50,9 +50,10 @@ export const verifyEmail = async (token: string): Promise<BaseApiResponse & { da
       error: null,
       data: response.data.data,
     };
-  } catch (error: any) {
-    const errorMessage = error.response?.data?.error || 'Email verification failed';
-    const status = error.response?.status || 500;
+  } catch (error: unknown) {
+    const err = error as AxiosError;
+    const errorMessage = err.response?.data?.error || 'Email verification failed';
+    const status = err.response?.status || 500;
     return {
       success: false,
       status,
@@ -74,8 +75,9 @@ export const getCurrentUser = async (): Promise<UserResponseData> => {
       }
     );
     return response.data.data;
-  } catch (error: any) {
-    const errorMessage = error.response?.data?.error || 'Failed to fetch user data';
+  } catch (error: unknown) {
+    const err = error as AxiosError;
+    const errorMessage = err.response?.data?.error || 'Failed to fetch user data';
     throw new Error(errorMessage);
   }
 };
@@ -108,9 +110,10 @@ export const loginUserFromUserApi = async (email: string, password: string): Pro
       error: null,
       data: response.data.data,
     };
-  } catch (error: any) {
-    const errorMessage = error.response?.data?.error || 'Login failed';
-    const status = error.response?.status || 500;
+  } catch (error: unknown) {
+    const err = error as AxiosError;
+    const errorMessage = err.response?.data?.error || 'Login failed';
+    const status = err.response?.status || 500;
     return {
       success: false,
       status,
@@ -118,3 +121,9 @@ export const loginUserFromUserApi = async (email: string, password: string): Pro
     };
   }
 };
+interface AxiosError {
+  response?: {
+    data?: { error?: string };
+    status?: number;
+  };
+}
