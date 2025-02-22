@@ -1,5 +1,8 @@
 {
   "rewrites": [
-    {"source": "/(.*)", "destination": "/"}
+    {
+      "source": "/api/(.*)", 
+      "destination": "https://dev.21yard.com/api/$1"
+    }
   ]
 }
