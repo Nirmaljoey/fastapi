@@ -1,8 +1,17 @@
 {
-  "rewrites": [
+  "headers": [
     {
-      "source": "/api/(.*)", 
-      "destination": "https://dev.21yard.com/api/$1"
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        }
+      ]
     }
   ]
 }
