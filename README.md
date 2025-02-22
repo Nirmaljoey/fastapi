@@ -34,7 +34,6 @@ This project is a **React-based frontend application** built with **TypeScript**
 /src
  ├── components/    # Reusable UI components
  ├── pages/         # Application pages (Home, Login, Register, Profile, Listings)
- ├── hooks/         # Custom React hooks
  ├── api/           # API service functions
  ├── utils/         # Utility functions
  ├── App.tsx        # Main application component
@@ -118,7 +117,6 @@ npm run preview
 /src
  ├── components/    # UI-компоненты
  ├── pages/         # Страницы приложения (Главная, Вход, Регистрация, Профиль, Объявления)
- ├── hooks/         # Кастомные хуки
  ├── api/           # Запросы к API
  ├── utils/         # Утилиты
  ├── App.tsx        # Главный компонент
