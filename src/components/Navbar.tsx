@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUserCircle, FaBars, FaTimes } from 'react-icons/fa'; // Added FaBars and FaTimes for hamburger menu
+import { FaUserCircle, FaBars, FaTimes } from 'react-icons/fa';
 import { useAuthContext } from '../context/AuthContext';
 import logo from '../assets/logo.svg';
-
 
 const Navbar: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuthContext();
@@ -14,9 +13,15 @@ const Navbar: React.FC = () => {
   const menuRef = useRef<HTMLDivElement>(null);
 
   const handleLogout = async () => {
-    await logout();
-    setShowDropdown(false);
-    navigate('/login');
+    try {
+      console.log('Attempting to log out...'); // Debug log
+      await logout(); // Ensure logout is called and awaited properly
+      setShowDropdown(false);
+      navigate('/login'); // Redirect to login page after logout
+      console.log('Logged out successfully, isAuthenticated:', isAuthenticated, 'user:', user); // Debug log
+    } catch (error) {
+      console.error('Logout failed:', error); // Log error for debugging
+    }
   };
 
   useEffect(() => {
@@ -32,7 +37,7 @@ const Navbar: React.FC = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [isAuthenticated, user]); // Added dependencies to re-run effect if auth state changes
 
   return (
     <nav className="w-screen flex justify-between items-center px-10 py-4 bg-white shadow-md">
@@ -67,26 +72,42 @@ const Navbar: React.FC = () => {
                 <FaUserCircle size={30} className="text-gray-700 hover:text-yellow-300" />
               </button>
               {showDropdown && (
-                <div className="absolute right-0 mt-2 w-60 bg-white shadow-lg rounded-lg z-50">
+                <div className="absolute right-0 mt-2 w-60 bg-white shadow-lg rounded-lg z-60">
                   <div className="p-4 border-b">
                     <p className="font-semibold text-lg text-black">{user?.name || 'User'}</p>
                     <p className="text-sm text-gray-600">{user?.email || ''}</p>
                   </div>
-                  <Link to="/personal-account/profile" className="block px-4 py-2 hover:bg-gray-100 text-black">
+                  <Link
+                    to="/personal-account/profile"
+                    className="block px-4 py-2 hover:bg-gray-100 text-black cursor-pointer"
+                    onClick={() => setShowDropdown(false)} // Close dropdown on click
+                  >
                     Мой профиль
                   </Link>
-                  <Link to="/companies" className="block px-4 py-2 hover:bg-gray-100 text-black">
+                  <Link
+                    to="/companies"
+                    className="block px-4 py-2 hover:bg-gray-100 text-black cursor-pointer"
+                    onClick={() => setShowDropdown(false)} // Close dropdown on click
+                  >
                     Мои компании
                   </Link>
-                  <Link to="/requests" className="block px-4 py-2 hover:bg-gray-100 text-black">
+                  <Link
+                    to="/requests"
+                    className="block px-4 py-2 hover:bg-gray-100 text-black cursor-pointer"
+                    onClick={() => setShowDropdown(false)} // Close dropdown on click
+                  >
                     Работа с заявками
                   </Link>
-                  <Link to="/settings" className="block px-4 py-2 hover:bg-gray-100 text-black">
+                  <Link
+                    to="/settings"
+                    className="block px-4 py-2 hover:bg-gray-100 text-black cursor-pointer"
+                    onClick={() => setShowDropdown(false)} // Close dropdown on click
+                  >
                     Настройки
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="block w-full bg-transparent px-4 py-2 text-left text-black hover:bg-red-500 hover:text-white"
+                    className="block w-full bg-transparent px-4 py-2 text-left text-black hover:bg-red-500 hover:text-white cursor-pointer"
                   >
                     Выйти
                   </button>
@@ -134,10 +155,30 @@ const Navbar: React.FC = () => {
       >
         {/* Navigation Links for Mobile - Centered and full-width in dropdown */}
         <div className="flex flex-col items-center w-full mb-4">
-          <Link to="/" className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200">Заказы</Link>
-          <Link to="/personal-account/profile/" className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200">Мои заявки</Link>
-          <Link to="/" className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200">Тарификация</Link>
-          <Link to="/" className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200">Шаблоны</Link>
+          <Link
+            to="/personal-account/profile/listings"
+            className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200"
+          >
+            Заказы
+          </Link>
+          <Link
+            to="/personal-account/profile/"
+            className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200"
+          >
+            Мои заявки
+          </Link>
+          <Link
+            to="/"
+            className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200"
+          >
+            Тарификация
+          </Link>
+          <Link
+            to="/"
+            className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200"
+          >
+            Шаблоны
+          </Link>
         </div>
 
         {/* Auth Section for Mobile - Centered and full-width in dropdown */}
@@ -163,21 +204,37 @@ const Navbar: React.FC = () => {
                       <p className="font-semibold text-lg text-black">{user?.name || 'User'}</p>
                       <p className="text-sm text-gray-600">{user?.email || ''}</p>
                     </div>
-                    <Link to="/personal-account/profile" className="block px-4 py-2 hover:bg-gray-100 text-black">
+                    <Link
+                      to="/personal-account/profile"
+                      className="block px-4 py-2 hover:bg-gray-100 text-black cursor-pointer"
+                      onClick={() => setShowDropdown(false)} // Close dropdown on click
+                    >
                       Мой профиль
                     </Link>
-                    <Link to="/companies" className="block px-4 py-2 hover:bg-gray-100 text-black">
+                    <Link
+                      to="/companies"
+                      className="block px-4 py-2 hover:bg-gray-100 text-black cursor-pointer"
+                      onClick={() => setShowDropdown(false)} // Close dropdown on click
+                    >
                       Мои компании
                     </Link>
-                    <Link to="/requests" className="block px-4 py-2 hover:bg-gray-100 text-black">
+                    <Link
+                      to="/requests"
+                      className="block px-4 py-2 hover:bg-gray-100 text-black cursor-pointer"
+                      onClick={() => setShowDropdown(false)} // Close dropdown on click
+                    >
                       Работа с заявками
                     </Link>
-                    <Link to="/settings" className="block px-4 py-2 hover:bg-gray-100 text-black">
+                    <Link
+                      to="/settings"
+                      className="block px-4 py-2 hover:bg-gray-100 text-black cursor-pointer"
+                      onClick={() => setShowDropdown(false)} // Close dropdown on click
+                    >
                       Настройки
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="block w-full bg-transparent px-4 py-2 text-left text-black hover:bg-red-500 hover:text-white"
+                      className="block w-full bg-transparent px-4 py-2 text-left text-black hover:bg-red-500 hover:text-white cursor-pointer"
                     >
                       Выйти
                     </button>
