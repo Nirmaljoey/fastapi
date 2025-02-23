@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom'; // Added for potential internal links, if needed
 import { FaPhone, FaEnvelope, FaTelegram, FaYoutube, FaWhatsapp, FaBars, FaTimes } from 'react-icons/fa';
 import logo from '../assets/21yard.svg';
 import mint from '../assets/Mintsifry_logo.png';
@@ -19,7 +18,7 @@ const Footer: React.FC = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, []);
+  }, [isMobileMenuOpen]); // Added dependency for better reactivity
 
   return (
     <footer className="bg-slate-700 text-white py-10">
@@ -95,6 +94,7 @@ const Footer: React.FC = () => {
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="md:hidden p-2 text-white focus:outline-none absolute right-4 top-4"
           aria-label="Toggle footer menu"
+          role="button" // Added for better accessibility
         >
           {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
         </button>
