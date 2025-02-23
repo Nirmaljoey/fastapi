@@ -36,7 +36,7 @@ const Navbar: React.FC = () => {
     };
   }, [isMobileMenuOpen]);
 
-  // Click outside handler
+  // Click outside handler with 'click' event
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -46,9 +46,9 @@ const Navbar: React.FC = () => {
         setIsMobileMenuOpen(false);
       }
     }
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('click', handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('click', handleClickOutside);
     };
   }, [isAuthenticated, user]);
 
