@@ -35,21 +35,21 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="w-full flex justify-between items-center px-10 py-4 bg-white shadow-md">
-      {/* Logo - Exact desktop layout */}
+      {/* Logo - Visible on both desktop and mobile */}
       <Link to="/" className="text-2xl font-bold text-black">
         <img src={logo} alt="21YARD Logo" className="h-4" />
       </Link>
 
-      {/* Navigation Links - Exact desktop layout */}
-      <div className="flex gap-10">
-        <Link to="/" className="text-black hover:text-gray-600">Заказы</Link>
-        <Link to="/personal-account/profile/" className="text-black hover:text-gray-600">Мои заявки</Link>
-        <Link to="/" className="text-black hover:text-gray-600">Тарификация</Link>
-        <Link to="/" className="text-black hover:text-gray-600">Шаблоны</Link>
+      {/* Desktop Navigation and Auth - Full layout, visible only on desktop */}
+      <div className="flex gap-10 md:flex md:items-center">
+        <Link to="/" className="text-black hover:text-gray-600 hidden md:block">Заказы</Link>
+        <Link to="/personal-account/profile/" className="text-black hover:text-gray-600 hidden md:block">Мои заявки</Link>
+        <Link to="/" className="text-black hover:text-gray-600 hidden md:block">Тарификация</Link>
+        <Link to="/" className="text-black hover:text-gray-600 hidden md:block">Шаблоны</Link>
       </div>
 
-      {/* Auth Section - Exact desktop layout */}
-      <div className="flex gap-8 items-center">
+      {/* Desktop Auth Section - Full layout, visible only on desktop */}
+      <div className="flex gap-8 items-center hidden md:flex">
         {isAuthenticated ? (
           <>
             <Link to="/personal-account/applications/create">
@@ -122,7 +122,7 @@ const Navbar: React.FC = () => {
         {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
       </button>
 
-      {/* Mobile Menu - Hidden on desktop, shown when hamburger is clicked */}
+      {/* Mobile Dropdown Menu - Hidden on desktop, shown when hamburger is clicked */}
       <div
         ref={menuRef}
         className={`${
@@ -131,7 +131,7 @@ const Navbar: React.FC = () => {
             : 'hidden'
         } md:hidden`}
       >
-        {/* Navigation Links for Mobile - Centered and full-width */}
+        {/* Navigation Links for Mobile - Centered and full-width in dropdown */}
         <div className="flex flex-col items-center w-full mb-4">
           <Link to="/" className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200">Заказы</Link>
           <Link to="/personal-account/profile/" className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200">Мои заявки</Link>
@@ -139,7 +139,7 @@ const Navbar: React.FC = () => {
           <Link to="/" className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200">Шаблоны</Link>
         </div>
 
-        {/* Auth Section for Mobile - Centered and full-width */}
+        {/* Auth Section for Mobile - Centered and full-width in dropdown */}
         <div className="flex flex-col items-center gap-4 w-full">
           {isAuthenticated ? (
             <>
