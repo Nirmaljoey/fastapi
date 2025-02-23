@@ -14,16 +14,29 @@ const Navbar: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      console.log('Attempting to log out...'); // Debug log
-      await logout(); // Ensure logout is called and awaited properly
+      console.log('Attempting to log out...');
+      await logout();
       setShowDropdown(false);
-      navigate('/login'); // Redirect to login page after logout
-      console.log('Logged out successfully, isAuthenticated:', isAuthenticated, 'user:', user); // Debug log
+      navigate('/login');
+      console.log('Logged out successfully, isAuthenticated:', isAuthenticated, 'user:', user);
     } catch (error) {
-      console.error('Logout failed:', error); // Log error for debugging
+      console.error('Logout failed:', error);
     }
   };
 
+  // Prevent page scrolling when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isMobileMenuOpen]);
+
+  // Click outside handler
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -37,16 +50,14 @@ const Navbar: React.FC = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isAuthenticated, user]); // Added dependencies to re-run effect if auth state changes
+  }, [isAuthenticated, user]);
 
   return (
     <nav className="w-screen flex justify-between items-center px-10 py-4 bg-white shadow-md">
-      {/* Logo - Visible on both desktop and mobile */}
       <Link to="/" className="text-2xl font-bold text-black">
         <img src={logo} alt="21YARD Logo" className="h-4" />
       </Link>
 
-      {/* Desktop Navigation and Auth - Full layout, unchanged for desktop */}
       <div className="flex gap-10 hidden md:flex">
         <Link to="/personal-account/profile/listings" className="text-black hover:text-gray-600">Заказы</Link>
         <Link to="/personal-account/profile/" className="text-black hover:text-gray-600">Мои заявки</Link>
@@ -54,7 +65,6 @@ const Navbar: React.FC = () => {
         <Link to="/" className="text-black hover:text-gray-600">Шаблоны</Link>
       </div>
 
-      {/* Desktop Auth Section - Full layout, unchanged for desktop */}
       <div className="flex gap-8 items-center hidden md:flex">
         {isAuthenticated ? (
           <>
@@ -63,7 +73,6 @@ const Navbar: React.FC = () => {
                 Создать заявку
               </button>
             </Link>
-
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setShowDropdown((prev) => !prev)}
@@ -80,28 +89,28 @@ const Navbar: React.FC = () => {
                   <Link
                     to="/personal-account/profile"
                     className="block px-4 py-2 hover:bg-gray-100 text-black cursor-pointer"
-                    onClick={() => setShowDropdown(false)} // Close dropdown on click
+                    onClick={() => setShowDropdown(false)}
                   >
                     Мой профиль
                   </Link>
                   <Link
                     to="/companies"
                     className="block px-4 py-2 hover:bg-gray-100 text-black cursor-pointer"
-                    onClick={() => setShowDropdown(false)} // Close dropdown on click
+                    onClick={() => setShowDropdown(false)}
                   >
                     Мои компании
                   </Link>
                   <Link
                     to="/requests"
                     className="block px-4 py-2 hover:bg-gray-100 text-black cursor-pointer"
-                    onClick={() => setShowDropdown(false)} // Close dropdown on click
+                    onClick={() => setShowDropdown(false)}
                   >
                     Работа с заявками
                   </Link>
                   <Link
                     to="/settings"
                     className="block px-4 py-2 hover:bg-gray-100 text-black cursor-pointer"
-                    onClick={() => setShowDropdown(false)} // Close dropdown on click
+                    onClick={() => setShowDropdown(false)}
                   >
                     Настройки
                   </Link>
@@ -117,12 +126,7 @@ const Navbar: React.FC = () => {
           </>
         ) : (
           <>
-            <a
-              href="https://t.me/manager21yard"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-black hover:text-gray-600"
-            >
+            <a href="https://t.me/manager21yard" target="_blank" rel="noopener noreferrer" className="text-black hover:text-gray-600">
               ❓
             </a>
             <Link to="/login" className="px-5 py-2 border border-gray-400 rounded-2xl hover:bg-gray-200">
@@ -135,7 +139,6 @@ const Navbar: React.FC = () => {
         )}
       </div>
 
-      {/* Mobile Hamburger Menu - Hidden on desktop, shown on mobile */}
       <button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         className="md:hidden p-2 text-gray-700 focus:outline-none absolute right-4 top-4"
@@ -144,7 +147,6 @@ const Navbar: React.FC = () => {
         {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
       </button>
 
-      {/* Mobile Dropdown Menu - Hidden on desktop, shown when hamburger is clicked */}
       <div
         ref={menuRef}
         className={`${
@@ -153,35 +155,21 @@ const Navbar: React.FC = () => {
             : 'hidden'
         } md:hidden`}
       >
-        {/* Navigation Links for Mobile - Centered and full-width in dropdown */}
         <div className="flex flex-col items-center w-full mb-4">
-          <Link
-            to="/personal-account/profile/listings"
-            className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200"
-          >
+          <Link to="/personal-account/profile/listings" className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200">
             Заказы
           </Link>
-          <Link
-            to="/personal-account/profile/"
-            className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200"
-          >
+          <Link to="/personal-account/profile/" className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200">
             Мои заявки
           </Link>
-          <Link
-            to="/"
-            className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200"
-          >
+          <Link to="/" className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200">
             Тарификация
           </Link>
-          <Link
-            to="/"
-            className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200"
-          >
+          <Link to="/" className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200">
             Шаблоны
           </Link>
         </div>
 
-        {/* Auth Section for Mobile - Centered and full-width in dropdown */}
         <div className="flex flex-col items-center gap-4 w-full">
           {isAuthenticated ? (
             <>
@@ -190,7 +178,6 @@ const Navbar: React.FC = () => {
                   Создать заявку
                 </button>
               </Link>
-
               <div className="relative w-full" ref={dropdownRef}>
                 <button
                   onClick={() => setShowDropdown((prev) => !prev)}
@@ -207,28 +194,28 @@ const Navbar: React.FC = () => {
                     <Link
                       to="/personal-account/profile"
                       className="block px-4 py-2 hover:bg-gray-100 text-black cursor-pointer"
-                      onClick={() => setShowDropdown(false)} // Close dropdown on click
+                      onClick={() => setShowDropdown(false)}
                     >
                       Мой профиль
                     </Link>
                     <Link
                       to="/companies"
                       className="block px-4 py-2 hover:bg-gray-100 text-black cursor-pointer"
-                      onClick={() => setShowDropdown(false)} // Close dropdown on click
+                      onClick={() => setShowDropdown(false)}
                     >
                       Мои компании
                     </Link>
                     <Link
                       to="/requests"
                       className="block px-4 py-2 hover:bg-gray-100 text-black cursor-pointer"
-                      onClick={() => setShowDropdown(false)} // Close dropdown on click
+                      onClick={() => setShowDropdown(false)}
                     >
                       Работа с заявками
                     </Link>
                     <Link
                       to="/settings"
                       className="block px-4 py-2 hover:bg-gray-100 text-black cursor-pointer"
-                      onClick={() => setShowDropdown(false)} // Close dropdown on click
+                      onClick={() => setShowDropdown(false)}
                     >
                       Настройки
                     </Link>
@@ -244,12 +231,7 @@ const Navbar: React.FC = () => {
             </>
           ) : (
             <>
-              <a
-                href="https://t.me/manager21yard"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-black hover:text-gray-600 py-2"
-              >
+              <a href="https://t.me/manager21yard" target="_blank" rel="noopener noreferrer" className="text-black hover:text-gray-600 py-2">
                 ❓
               </a>
               <Link to="/login" className="px-5 py-2 border border-gray-400 rounded-2xl hover:bg-gray-200 w-full text-center mb-4">
