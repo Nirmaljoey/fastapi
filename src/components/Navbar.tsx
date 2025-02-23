@@ -43,7 +43,7 @@ const Navbar: React.FC = () => {
 
       {/* Desktop Navigation and Auth - Full layout, unchanged for desktop */}
       <div className="flex gap-10 hidden md:flex">
-        <Link to="/" className="text-black hover:text-gray-600">Заказы</Link>
+        <Link to="/personal-account/profile/listings" className="text-black hover:text-gray-600">Заказы</Link>
         <Link to="/personal-account/profile/" className="text-black hover:text-gray-600">Мои заявки</Link>
         <Link to="/" className="text-black hover:text-gray-600">Тарификация</Link>
         <Link to="/" className="text-black hover:text-gray-600">Шаблоны</Link>
