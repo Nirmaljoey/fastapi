@@ -1,13 +1,15 @@
 #root {
-  max-width: 1280px;
+  max-width: 1280px; /* Keeps desktop layout constrained */
+  width: 100%; /* Ensures it takes full width on smaller screens */
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2rem; /* Default padding for desktop */
   text-align: center;
+  box-sizing: border-box; /* Ensures padding doesn’t overflow */
 }
 
 .logo {
-  height: 6em;
-  padding: 1.5em;
+  height: 6em; /* Default for desktop */
+  padding: 1.5em; /* Default for desktop */
   will-change: filter;
   transition: filter 300ms;
 }
@@ -24,7 +26,6 @@
   from {
     transform: rotate(0deg);
   }
-
   to {
     transform: rotate(360deg);
   }
@@ -37,9 +38,40 @@
 }
 
 .card {
-  padding: 2em;
+  padding: 2em; /* Default for desktop */
 }
 
 .read-the-docs {
   color: #888;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  #root {
+    padding: 1rem; /* Reduced padding for tablets and smaller screens */
+  }
+
+  .logo {
+    height: 4em; /* Smaller logo on mobile */
+    padding: 1em; /* Less padding around logo */
+  }
+
+  .card {
+    padding: 1em; /* Smaller padding for cards */
+  }
+}
+
+@media (max-width: 480px) {
+  #root {
+    padding: 0.5rem; /* Minimal padding for small phones */
+  }
+
+  .logo {
+    height: 3em; /* Even smaller logo */
+    padding: 0.5em; /* Minimal padding */
+  }
+
+  .card {
+    padding: 0.75em; /* Tighten up card padding */
+  }
 }
