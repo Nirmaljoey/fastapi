@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
 import { useAuthContext } from '../context/AuthContext';
+import logo from '../assets/logo.svg';
 
 const Navbar: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuthContext();
@@ -30,7 +31,7 @@ const Navbar: React.FC = () => {
   return (
     <nav className="w-screen flex justify-between items-center px-10 py-4 bg-white shadow-md">
       <Link to="/" className="text-2xl font-bold text-black">
-        <img src="/src/assets/logo.svg" alt="21YARD Logo" className="h-4" />
+        <img src={logo} alt="21YARD Logo" className="h-4" />
       </Link>
       <div className="flex gap-10">
         <Link to="/" className="text-black hover:text-gray-600">Заказы</Link>
