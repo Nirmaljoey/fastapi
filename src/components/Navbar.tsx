@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUserCircle, FaBars, FaTimes } from 'react-icons/fa'; // Added FaBars and FaTimes for hamburger menu
+import { FaUserCircle, FaBars, FaTimes } from 'react-icons/fa';
 import { useAuthContext } from '../context/AuthContext';
 import logo from '../assets/logo.svg';
 
@@ -8,7 +8,7 @@ const Navbar: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuthContext();
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // State for mobile menu toggle
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -35,12 +35,12 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="w-full flex justify-between items-center px-10 py-4 bg-white shadow-md">
-      {/* Logo - Restored to original desktop layout */}
+      {/* Logo - Exact desktop layout */}
       <Link to="/" className="text-2xl font-bold text-black">
-        <img src={logo} alt="21YARD Logo" className="h-4" /> {/* Original size for desktop */}
+        <img src={logo} alt="21YARD Logo" className="h-4" />
       </Link>
 
-      {/* Navigation Links - Restored to original desktop layout */}
+      {/* Navigation Links - Exact desktop layout */}
       <div className="flex gap-10">
         <Link to="/" className="text-black hover:text-gray-600">Заказы</Link>
         <Link to="/personal-account/profile/" className="text-black hover:text-gray-600">Мои заявки</Link>
@@ -48,7 +48,7 @@ const Navbar: React.FC = () => {
         <Link to="/" className="text-black hover:text-gray-600">Шаблоны</Link>
       </div>
 
-      {/* Auth Section - Restored to original desktop layout */}
+      {/* Auth Section - Exact desktop layout */}
       <div className="flex gap-8 items-center">
         {isAuthenticated ? (
           <>
@@ -66,7 +66,7 @@ const Navbar: React.FC = () => {
                 <FaUserCircle size={30} className="text-gray-700 hover:text-yellow-300" />
               </button>
               {showDropdown && (
-                <div className="absolute right-0 mt-2 w-60 bg-white shadow-lg rounded-lg z-50">
+                <div className="absolute right-0 mt-2 w-60 bg-white shadow-lg rounded-lg z-60">
                   <div className="p-4 border-b">
                     <p className="font-semibold text-lg text-black">{user?.name || 'User'}</p>
                     <p className="text-sm text-gray-600">{user?.email || ''}</p>
@@ -152,12 +152,12 @@ const Navbar: React.FC = () => {
               <div className="relative w-full" ref={dropdownRef}>
                 <button
                   onClick={() => setShowDropdown((prev) => !prev)}
-                  className="flex items-center justify-center w-full focus:outline-none bg-transparent"
+                  className="flex items-center justify-center w-full focus:outline-none bg-transparent mt-4"
                 >
                   <FaUserCircle size={30} className="text-gray-700 hover:text-yellow-300" />
                 </button>
                 {showDropdown && (
-                  <div className="absolute right-0 mt-2 w-60 bg-white shadow-lg rounded-lg z-50">
+                  <div className="absolute right-0 mt-2 w-60 bg-white shadow-lg rounded-lg z-60">
                     <div className="p-4 border-b">
                       <p className="font-semibold text-lg text-black">{user?.name || 'User'}</p>
                       <p className="text-sm text-gray-600">{user?.email || ''}</p>
