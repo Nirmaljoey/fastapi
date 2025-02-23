@@ -131,20 +131,20 @@ const Navbar: React.FC = () => {
             : 'hidden'
         } md:hidden`}
       >
-        {/* Navigation Links for Mobile */}
+        {/* Navigation Links for Mobile - Centered and full-width */}
         <div className="flex flex-col items-center w-full mb-4">
-          <Link to="/" className="text-black hover:text-gray-600 py-2 w-full text-center">Заказы</Link>
-          <Link to="/personal-account/profile/" className="text-black hover:text-gray-600 py-2 w-full text-center">Мои заявки</Link>
-          <Link to="/" className="text-black hover:text-gray-600 py-2 w-full text-center">Тарификация</Link>
-          <Link to="/" className="text-black hover:text-gray-600 py-2 w-full text-center">Шаблоны</Link>
+          <Link to="/" className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200">Заказы</Link>
+          <Link to="/personal-account/profile/" className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200">Мои заявки</Link>
+          <Link to="/" className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200">Тарификация</Link>
+          <Link to="/" className="text-black hover:text-gray-600 py-2 w-full text-center border-b border-gray-200">Шаблоны</Link>
         </div>
 
-        {/* Auth Section for Mobile */}
+        {/* Auth Section for Mobile - Centered and full-width */}
         <div className="flex flex-col items-center gap-4 w-full">
           {isAuthenticated ? (
             <>
               <Link to="/personal-account/applications/create">
-                <button className="bg-yellow-400 text-black px-5 py-2 rounded-2xl hover:bg-yellow-300 w-full">
+                <button className="bg-yellow-400 text-black px-5 py-2 rounded-2xl hover:bg-yellow-300 w-full mb-4">
                   Создать заявку
                 </button>
               </Link>
@@ -152,7 +152,7 @@ const Navbar: React.FC = () => {
               <div className="relative w-full" ref={dropdownRef}>
                 <button
                   onClick={() => setShowDropdown((prev) => !prev)}
-                  className="flex items-center justify-center w-full focus:outline-none bg-transparent mt-4"
+                  className="flex items-center justify-center w-full focus:outline-none bg-transparent"
                 >
                   <FaUserCircle size={30} className="text-gray-700 hover:text-yellow-300" />
                 </button>
@@ -194,7 +194,7 @@ const Navbar: React.FC = () => {
               >
                 ❓
               </a>
-              <Link to="/login" className="px-5 py-2 border border-gray-400 rounded-2xl hover:bg-gray-200 w-full text-center">
+              <Link to="/login" className="px-5 py-2 border border-gray-400 rounded-2xl hover:bg-gray-200 w-full text-center mb-4">
                 Вход
               </Link>
               <Link to="/register" className="px-5 py-2 bg-yellow-400 text-black rounded-2xl hover:bg-yellow-300 w-full text-center">
