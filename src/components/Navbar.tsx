@@ -8,23 +8,22 @@ const Navbar: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuthContext();
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
 
   const handleLogout = async () => {
-    await logout();
-    setShowDropdown(false);
-    navigate('/login');
+    try {
+      await logout(); // Ensure logout is called and awaited properly
+      setShowDropdown(false);
+      navigate('/login'); // Redirect to login page after logout
+    } catch (error) {
+      console.error('Logout failed:', error); // Log error for debugging
+    }
   };
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setShowDropdown(false);
-      }
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsMobileMenuOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -35,21 +34,21 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="w-full flex justify-between items-center px-10 py-4 bg-white shadow-md">
-      {/* Logo - Visible on both desktop and mobile */}
+      {/* Logo - Exact desktop layout */}
       <Link to="/" className="text-2xl font-bold text-black">
         <img src={logo} alt="21YARD Logo" className="h-4" />
       </Link>
 
-      {/* Desktop Navigation and Auth - Full layout, visible only on desktop */}
-      <div className="flex gap-10 md:flex md:items-center">
-        <Link to="/" className="text-black hover:text-gray-600 hidden md:block">Заказы</Link>
-        <Link to="/personal-account/profile/" className="text-black hover:text-gray-600 hidden md:block">Мои заявки</Link>
-        <Link to="/" className="text-black hover:text-gray-600 hidden md:block">Тарификация</Link>
-        <Link to="/" className="text-black hover:text-gray-600 hidden md:block">Шаблоны</Link>
+      {/* Navigation Links - Exact desktop layout */}
+      <div className="flex gap-10">
+        <Link to="/" className="text-black hover:text-gray-600">Заказы</Link>
+        <Link to="/personal-account/profile/" className="text-black hover:text-gray-600">Мои заявки</Link>
+        <Link to="/" className="text-black hover:text-gray-600">Тарификация</Link>
+        <Link to="/" className="text-black hover:text-gray-600">Шаблоны</Link>
       </div>
 
-      {/* Desktop Auth Section - Full layout, visible only on desktop */}
-      <div className="flex gap-8 items-center hidden md:flex">
+      {/* Auth Section - Exact desktop layout */}
+      <div className="flex gap-8 items-center">
         {isAuthenticated ? (
           <>
             <Link to="/personal-account/applications/create">
@@ -66,7 +65,7 @@ const Navbar: React.FC = () => {
                 <FaUserCircle size={30} className="text-gray-700 hover:text-yellow-300" />
               </button>
               {showDropdown && (
-                <div className="absolute right-0 mt-2 w-60 bg-white shadow-lg rounded-lg z-60">
+                <div className="absolute right-0 mt-2 w-60 bg-white shadow-lg rounded-lg z-50">
                   <div className="p-4 border-b">
                     <p className="font-semibold text-lg text-black">{user?.name || 'User'}</p>
                     <p className="text-sm text-gray-600">{user?.email || ''}</p>
