@@ -39,21 +39,21 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="w-full flex justify-between items-center px-10 py-4 bg-white shadow-md">
-      {/* Logo - Exact desktop layout */}
+      {/* Logo - Visible on both desktop and mobile */}
       <Link to="/" className="text-2xl font-bold text-black">
         <img src={logo} alt="21YARD Logo" className="h-4" />
       </Link>
 
-      {/* Navigation Links - Exact desktop layout */}
-      <div className="flex gap-10">
+      {/* Desktop Navigation and Auth - Full layout, visible only on desktop */}
+      <div className="flex gap-10 hidden md:flex">
         <Link to="/" className="text-black hover:text-gray-600">Заказы</Link>
         <Link to="/personal-account/profile/" className="text-black hover:text-gray-600">Мои заявки</Link>
         <Link to="/" className="text-black hover:text-gray-600">Тарификация</Link>
         <Link to="/" className="text-black hover:text-gray-600">Шаблоны</Link>
       </div>
 
-      {/* Auth Section - Exact desktop layout */}
-      <div className="flex gap-8 items-center">
+      {/* Desktop Auth Section - Full layout, visible only on desktop */}
+      <div className="flex gap-8 items-center hidden md:flex">
         {isAuthenticated ? (
           <>
             <Link to="/personal-account/applications/create">
