@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom'; // Added for potential internal links, if needed
 import { FaPhone, FaEnvelope, FaTelegram, FaYoutube, FaWhatsapp, FaBars, FaTimes } from 'react-icons/fa';
 import logo from '../assets/21yard.svg';
 import mint from '../assets/Mintsifry_logo.png';
