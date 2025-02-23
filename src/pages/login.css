@@ -1,89 +1,139 @@
-.appContainer {
+/* Navbar base styles */
+nav {
+  width: 100vw; /* Matches w-screen in Tailwind */
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem 2.5rem; /* Matches px-10 py-4 in Tailwind */
+}
+
+/* Logo */
+.logo {
+  height: 1rem; /* Matches h-4 in Tailwind */
+}
+
+/* Navigation links and auth section - desktop only */
+.nav-links, .auth-section {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
+  gap: 2.5rem; /* Matches gap-10 in Tailwind */
+  align-items: center;
 }
 
-.formContainer {
-  flex: 1;
-  max-width: 400px;
-  padding: 1rem;
-  box-sizing: border-box;
-}
-
-.sidebar {
-  flex: 0 0 300px;
-  background: #2c3e50;
-  color: white;
-  padding: 1rem;
-  text-align: left;
-}
-
-.inputField {
-  width: 100%;
+.nav-link, .auth-button {
   padding: 0.5rem;
-  font-size: 16px;
-  margin-bottom: 0.5rem;
-  height: 48px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-}
-
-.btn {
-  width: 100%;
-  padding: 0.75rem 1.5rem;
-  font-size: 16px;
-  height: 48px;
-  background-color: #f1c40f;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 0.5rem;
-}
-
-.link {
-  color: #007bff;
   text-decoration: none;
-  font-size: 14px;
+  color: black;
 }
 
-/* Mobile adjustments */
+.nav-link:hover, .auth-button:hover {
+  color: gray;
+}
+
+.auth-button {
+  border-radius: 0.5rem; /* Matches rounded-2xl in Tailwind */
+  transition: background-color 0.2s;
+}
+
+.auth-button.bg-yellow-400 {
+  background-color: #f1c40f;
+}
+
+.auth-button.bg-yellow-400:hover {
+  background-color: #e0b50d;
+}
+
+.auth-button.border-gray-400 {
+  border: 1px solid #d1d5db;
+}
+
+.auth-button.border-gray-400:hover {
+  background-color: #f3f4f6;
+}
+
+/* Hamburger button - hidden on desktop, shown on mobile */
+.hamburger {
+  display: none;
+  padding: 0.5rem;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+}
+
+/* Mobile dropdown menu - hidden on desktop, shown when hamburger is clicked */
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 4rem;
+  left: 0;
+  width: 100%;
+  padding: 1rem;
+  z-index: 50;
+}
+
+.mobile-menu.open {
+  display: flex;
+}
+
+.mobile-menu .nav-link, .mobile-menu .auth-button {
+  width: 100%;
+  text-align: center;
+  padding: 0.5rem;
+  border-bottom: 1px solid #e5e7eb; /* Matches border-gray-200 in Tailwind */
+  margin-bottom: 0.5rem;
+}
+
+.mobile-menu .nav-link:hover, .mobile-menu .auth-button:hover {
+  background-color: #f3f4f6;
+}
+
+/* User dropdown - higher z-index to stay above mobile menu */
+.dropdown {
+  position: absolute;
+  right: 0;
+  top: 2rem;
+  width: 15rem;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  z-index: 60;
+}
+
+/* Media queries for mobile */
 @media (max-width: 768px) {
-  .appContainer {
-    flex-direction: column;
-    align-items: center;
+  nav {
+    padding: 1rem;
+    position: relative;
   }
 
-  .formContainer {
-    padding: 0.5rem;
+  .nav-links, .auth-section {
+    display: none;
   }
 
-  .sidebar {
-    flex: 0 0 auto;
-    width: 100%;
-    text-align: center;
+  .hamburger {
+    display: block;
   }
 
-  .inputField {
-    font-size: 14px;
+  .mobile-menu .nav-link, .mobile-menu .auth-button {
+    font-size: 0.9rem;
     padding: 0.4rem;
   }
 
-  .btn {
-    font-size: 14px;
-    padding: 0.5rem 1rem;
+  .logo {
+    height: 2rem; /* Larger logo on mobile */
   }
 }
 
+/* Smaller mobile adjustments (≤480px) */
 @media (max-width: 480px) {
-  .formContainer {
-    padding: 0.25rem;
-  }
-
-  .sidebar {
-    padding: 0.5rem;
-    font-size: 12px;
+  .mobile-menu .nav-link, .mobile-menu .auth-button {
+    font-size: 0.8rem;
+    padding: 0.3rem;
   }
 }
